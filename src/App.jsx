@@ -3,19 +3,43 @@ import { useState } from "react";
 const App = () => {
 
 	/*
-	Versione iniziale:
-	- 7 input, 7 state
-	- ogni input legge il suo value da uno state (one-way data binding)
-	- ogni input, quando cambia, aggiorna uno state con il setter (two-way)
+	Versione con oggetto:
+	- 7 input
+	- 1 solo state (oggetto) che ha 7 proprietà
+	- ogni input legge il suo value da una proprietà dello state con
+		<input value={oggetto.proprietà} />
+	- ogni input deve avere un "name" uguale al nome della proprietà
+		<input value={oggetto.proprietà} name="proprietà" />
+	- ogni input, quando cambia, riscrive l'oggetto aggiornato nello state
+		<input value={oggetto.proprietà} name="proprietà" onChange={aggiornaBiglietto} />
+	- la funzione prende i dati dell'evento: il name dell'input e cosa l'utente ci ha scritto.
+	fa una copia degli attuali dati del biglietto (non può modificarli direttamente).
+	aggiorna questi dati e li usa per riscrivere lo state (v. codice funzione in basso)
 	*/
 
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [companyName, setCompanyName] = useState("");
-	const [role, setRole] = useState("");
-	const [email, setEmail] = useState("");
-	const [phone, setPhone] = useState("");
-	const [companyPic, setCompanyPic] = useState("");
+	const [datiBiglietto, setDatiBiglietto] = useState({
+		firstName: "Luca",
+		lastName: "Lambiase",
+		companyName: "Boolean",
+		role: "",
+		email: "",
+		phone: "",
+		companyPic: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg"
+	});
+
+	function aggiornaBiglietto(event) {
+
+		console.log("Ricevuto evento da input --> ", event.target); //controllate cosa stampa per capire meglio i prossimi due passaggi
+
+		const key = event.target.name;
+		const value = event.target.value;
+
+		console.log(`Devo scrivere "${value}" in "datiBiglietto.${key}"`);
+
+		const nuovoBiglietto = { ...datiBiglietto }; //copio oggetto
+		nuovoBiglietto[key] = value; //aggiorno il campo con il nuovo valore
+		setDatiBiglietto(nuovoBiglietto); //scrivo l'oggetto aggiornato nello state
+	}
 
 	return (
 		<div className="container mt-3">
@@ -29,8 +53,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Nome"
 									type="text"
-									value={firstName}
-									onChange={(e) => setFirstName(e.target.value)}
+									name="firstName"
+									value={datiBiglietto.firstName}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 							<div className="col">
@@ -38,8 +63,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Cognome"
 									type="text"
-									value={lastName}
-									onChange={(e) => setLastName(e.target.value)}
+									name="lastName"
+									value={datiBiglietto.lastName}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 							<div className="col">
@@ -47,8 +73,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Azienda"
 									type="text"
-									value={companyName}
-									onChange={(e) => setCompanyName(e.target.value)}
+									name="companyName"
+									value={datiBiglietto.companyName}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 							<div className="col">
@@ -56,8 +83,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Ruolo"
 									type="text"
-									value={role}
-									onChange={(e) => setRole(e.target.value)}
+									name="role"
+									value={datiBiglietto.role}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 							<div className="col">
@@ -65,8 +93,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Email"
 									type="email"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
+									name="email"
+									value={datiBiglietto.email}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 							<div className="col">
@@ -74,8 +103,9 @@ const App = () => {
 									className="form-control"
 									placeholder="Telefono"
 									type="tel"
-									value={phone}
-									onChange={(e) => setPhone(e.target.value)}
+									name="phone"
+									value={datiBiglietto.phone}
+									onChange={aggiornaBiglietto}
 								/>
 							</div>
 						</div>
@@ -83,8 +113,9 @@ const App = () => {
 							className="form-control mt-3"
 							placeholder="Logo Azienda"
 							type="url"
-							value={companyPic}
-							onChange={(e) => setCompanyPic(e.target.value)}
+							name="companyPic"
+							value={datiBiglietto.companyPic}
+							onChange={aggiornaBiglietto}
 						/>
 					</form>
 				</div>
@@ -94,28 +125,28 @@ const App = () => {
 
 					{/* BUSINESS CARD */}
 					<div className="card h-100">
-						<div className="card-header">{companyName}</div>
+						<div className="card-header">{datiBiglietto.companyName}</div>
 						<div className="card-body">
 							<div className="row row-cols-2">
 								<div className="col">
 									<blockquote className="blockquote mb-0">
 										<p>
-											{firstName} {lastName}
+											{datiBiglietto.firstName} {datiBiglietto.lastName}
 										</p>
 										<footer className="blockquote-footer">
-											<cite title={role}>{role}</cite>
+											<cite title={datiBiglietto.role}>{datiBiglietto.role}</cite>
 										</footer>
 									</blockquote>
 									<ul className="list-unstyled">
-										<li><i className="bi bi-telephone-fill"></i> {phone}</li>
-										<li><i className="bi bi-envelope-at"></i> {email}</li>
+										<li><i className="bi bi-telephone-fill"></i> {datiBiglietto.phone}</li>
+										<li><i className="bi bi-envelope-at"></i> {datiBiglietto.email}</li>
 									</ul>
 								</div>
 								<div className="col">
 									<img
 										className="img-fluid"
-										src={companyPic}
-										alt={companyName}
+										src={datiBiglietto.companyPic}
+										alt={datiBiglietto.companyName}
 									/>
 								</div>
 							</div>
