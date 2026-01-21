@@ -2,6 +2,13 @@ import { useState } from "react";
 
 const App = () => {
 
+	/*
+	Versione iniziale:
+	- 7 input, 7 state
+	- ogni input legge il suo value da uno state (one-way data binding)
+	- ogni input, quando cambia, aggiorna uno state con il setter (two-way)
+	*/
+
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [companyName, setCompanyName] = useState("");
